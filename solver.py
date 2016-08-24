@@ -1,7 +1,7 @@
 # A simple numerical equation solver.
 # NOTE: it assumes that there is only one solution on the specified interval
 
-import math, random
+import math, random, sys
 
 # USER INPUT PARAMETERS. EDIT AS DESIRED
 
@@ -16,6 +16,7 @@ upper = 6
 tolerance = 10 ** (-6)
 
 # DO NOT EDIT BEYOND HERE
+max_depth = 100
 
 # number of values evaluated per test interval
 per_interval = 10
@@ -23,19 +24,23 @@ per_interval = 10
 # when difference is approx. equal to 0, a solution has been found
 difference = lambda x: l_expression(x) - r_expression(x)
 
-while upper - lower > tolerance:
-	pairs = []
-	# calculate the difference value for a number of points on the interval
-	for j in range(per_interval+1):
-		val = lower + (upper - lower) * (j / float(per_interval))
-		pairs.append( (abs(difference(val)), val) )
-	# sort the difference-value pairs by absolute value of difference
-	pairs.sort()
-	# set the new upper and lower based on the smallest values of difference
-	# found, the solution is probably on that interval
-	bounds = (pairs[0][1], pairs[1][1])
-	lower = min(bounds)
-	upper = max(bounds)
-
-# Average final upper and lower bounds to approximate solution
-print "Estimated solution: %f" % ((lower + upper) / 2.)
+for _ in range(max_depth):
+	if upper - lower > tolerance:
+		pairs = []
+		# calculate the difference value for a number of points on the interval
+		for i in range(per_interval+1):
+			val = lower + (upper - lower) * (i / float(per_interval))
+			pairs.append( (abs(difference(val)), val) )
+		# sort the difference-value pairs by absolute value of difference
+		pairs.sort()
+		# set the new upper and lower based on the smallest values of difference
+		# found, the solution is probably on that interval
+		bounds = (pairs[0][1], pairs[1][1])
+		lower = min(bounds)
+		upper = max(bounds)
+	else:
+		# Average final upper and lower bounds to approximate solution and exit
+		print "Estimated solution: %f" % ((lower + upper) / 2.)
+		sys.exit()
+else:
+	print "No solution found."
