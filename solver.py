@@ -16,6 +16,7 @@ upper = 6
 tolerance = 10 ** (-6)
 
 # DO NOT EDIT BEYOND HERE
+# maximum number of intervals to evaluate before assuming there is no solution
 max_depth = 100
 
 # number of values evaluated per test interval
